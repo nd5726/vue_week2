@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    
+</head>
+<body >
+    <div id="app" class="w-3/4 font-sans container mx-auto  py-12 px-4">
+        <h2 class="border-l-8 border-slate-600 text-2xl font-bold text-slate-600 leading-none tracking-wider pl-4">產品管理</h2>
+        <br>
+        <div class="flex">
+            <div class="w-full shrink">
+                <table class="w-full">
+                    <tbody>
+                        <tr class="text-base  bg-slate-600 text-white">
+                            <th class="3/12 py-3"><p>產品名稱</p></th>
+                            <th class="2/12 py-3"><p>原價</p></th>
+                            <th class="2/12 py-3"><p>售價</p></th>
+                            <th class="2/12 py-3"><p>是否啟用</p></th>
+                            <th class="3/12 py-3"><p>查看細節</p></th>				
+                        </tr>
+                        <tr v-for="(product , key) in products" :key="product.name" class="text-center odd:bg-gray-100 text-gray-500 font-bold"  >
+                            <td class="3/12 py-3 "><p>{{ product.title }}</p></td>
+                            <td class="2/12 py-3"><p>{{ product.origin_price }}</p></td>
+                            <td class="2/12 py-3"><p>{{ product.price }}</p></td>
+                            <td class="2/12 py-3">
+                                <p v-if="product.is_enabled "><span class="text-green-600">啟用</span></p>
+                                <p v-else><span class="text-black">未啟用</span></p>
+                            </td>
+                            <td class="3/12 py-3"><button type="button" class="bg-slate-300 font-bold rounded px-4 py-2" v-on:click=" tempProduct = product ">查看細節</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="font-bold text-slate-500 my-4 text-right tracking-wider">目前有 {{ products.length }} 項產品</p>
+            </div>
+            
+    
+            <div v-if="tempProduct.title" class="w-1/3 shrink-0 border-l-8 border-slate-600 ml-8 bg-gray-200 p-8">
+                <div class="flex flex-col items-stretch">
+                    <div class="w-full">
+                        <img v-bind:src="tempProduct.imageUrl" v-bind:alt="tempProduct.title">
+                    </div>
+                    <ul class="w-full mt-4 flex overflow-x-scroll imageslist">
+                        <li v-for="images in tempProduct.imagesUrl" class="mb-4 w-1/3 pr-4">
+                            <img v-bind:src="images" alt="">
+                        </li>
+                    </ul>
+                </div>
+                <div class="flex items-center">
+                    <h1 class="text-slate-600 text-2xl font-bold mr-4">{{ tempProduct.title }}</h1>
+                    <span class="text-white bg-slate-500 rounded text-sm px-2 py-1">{{ tempProduct.category }}</span>
+                </div>
+                <p class="text-gray-500 text-base font-bold my-2">{{ tempProduct.description }}</p>
+                <p class="text-gray-500 text-base font-bold my-2">{{ tempProduct.content }}</p>
+                <p class="text-slate-600 text-lg font-bold mr-4">售價 : {{ tempProduct.price }} /<span class="line-through ml-2">{{ tempProduct.origin_price }}</span> {{ tempProduct.unit }}</p>
+            </div>
+        </div>
+        
+    </div>
+    
+</body>
+
+<script type="module">
+    import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js';
+
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hextoken\s*\=\s*([^;]*).*$)|^.*$/, "$1"); //取得cookie內的token
+    axios.defaults.headers.common['Authorization'] = token; // 夾帶到axios的header驗證資訊中
+
+    const app = createApp({
+        data(){
+            return {
+                apiUrl : 'https://vue3-course-api.hexschool.io/v2' ,
+                apiPath : 'nd5726-hexschool',
+                products : [],
+                tempProduct : [],
+            }
+        },
+        methods: {
+            checkLogin(){
+                axios.post(`${this.apiUrl}/api/user/check`)
+                .then((res)=>{
+                    this.getProducts();
+                })
+                .catch((error)=>{
+                    window.alert("請先登入 !!");
+                    location.href="week2.html";
+                })
+            },
+            getProducts() {
+                axios.get(`${this.apiUrl}/api/${this.apiPath}/admin/products`)
+                .then((res)=>{
+                    this.products = res.data.products ;
+                })
+                .catch((error)=>{
+                    console.dir(error);
+                })
+            }
+        },
+        mounted(){
+            this.checkLogin();
+        }
+    });
+
+    app.mount('#app');
+
+</script>
+</html>
