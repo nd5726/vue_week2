@@ -11,11 +11,11 @@
 </head>
 <body >
     <div id="app" class="bg-gray-300 w-full flex justify-center items-center h-screen font-sans">
-        <div class=" w-1/2 max-w-xl bg-white flex flex-col px-8 py-12 shadow-lg">
-            <input type="email"  v-model="user.username" id="email" class="bg-gray-200 py-4 px-4 outline-0 mb-8  placeholder:text-gray-400 placeholder:font-light  placeholder:text-base tracking-wider" placeholder="Email">
-            <input type="password" v-model="user.password" id="password"  class="bg-gray-200 py-4 px-4 outline-0 mb-8  placeholder:text-gray-400 placeholder:font-light  placeholder:text-base tracking-wider" placeholder="Password">
-            <button type="button" class="w-full bg-slate-500 text-white py-4 tracking-wider" v-on:click="login()">LOGIN</button>
-        </div>
+        <form class=" w-1/2 max-w-xl bg-white flex flex-col px-8 py-12 shadow-lg"  @submit.prevent="login">
+            <input type="email" required="required" autofocus  v-model="user.username" id="email" class="bg-gray-200 py-4 px-4 outline-0 mb-8  placeholder:text-gray-400 placeholder:font-light  placeholder:text-base tracking-wider" placeholder="Email">
+            <input type="password" required="required" autofocus v-model="user.password" id="password"  class="bg-gray-200 py-4 px-4 outline-0 mb-8  placeholder:text-gray-400 placeholder:font-light  placeholder:text-base tracking-wider" placeholder="Password">
+            <button type="submit" class="w-full bg-slate-500 text-white py-4 tracking-wider">LOGIN</button>
+        </form>
     </div>
     
 </body>
@@ -46,7 +46,10 @@
                 })
 
                 .catch((error)=>{
-                    window.alert("登入失敗了QQ");
+                    window.alert("登入失敗了,請重新登入");
+                    this.user.username ='';
+                    this.user.password ='';
+                    
                 })
            },
 
