@@ -78,7 +78,7 @@
         </div>
   
         <div id="defaultModal"  aria-hidden="true" v-show="showFormModal" class="flex overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center h-modal md:h-full md:inset-0 bg-white bg-opacity-60 ">
-            <form class="relative w-2/3 bg-white rounded-lg shadow bg-gray-700" @submit.prevent="login">
+            <form class="relative w-2/3 bg-white rounded-lg shadow bg-gray-700" @submit.prevent="updateProduct">
             
 
                 
@@ -164,7 +164,7 @@
             
                 <div class="flex justify-end items-center p-6 space-x-2 rounded-b border-t border-gray-200 border-gray-600">
                     <button data-modal-toggle="defaultModal" type="button" @click="showFormModal = false" class="font-bold bg-gray-500  text-white focus:ring-4 focus:ring-gray-300 rounded-lg border border-gray-200 text-base  px-8 py-2.5 focus:z-10  hover:bg-gray-600">取消</button>
-                    <button data-modal-toggle="defaultModal" type="button" @click="updateProduct" class="font-bold text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-lg text-base px-8 py-2.5 text-center">送出</button>
+                    <button data-modal-toggle="defaultModal" type="submit"  class="font-bold text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-lg text-base px-8 py-2.5 text-center">送出</button>
                 </div>
 
             </form>
