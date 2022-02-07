@@ -148,13 +148,17 @@
                         
                         <div class="px-2">
                             <p class="text-xl font-bold text-white  pt-4 pb-2">新增其他圖片</p>
-                            <div class="">
+                            <div  v-if="Array.isArray(tempProduct.imagesUrl)">
                                 <div class="w-full flex flex-col mb-3" v-for="(image , key) in tempProduct.imagesUrl"   :key="key">
                                     <label :for="key"  class="text-white">圖片網址</label>
                                     <input type="text" class="rounded px-2 py-2" :id="key" v-model="tempProduct.imagesUrl[key]">
                                 </div>
+                                <button type="button" v-if="!tempProduct.imagesUrl.length || tempProduct.imagesUrl[tempProduct.imagesUrl.length - 1]"  @click="tempProduct.imagesUrl.push('')" class="bg-gray-500 text-white w-full py-2 rounded border-2 transition-colors ease-linear hover:bg-gray-700 ">新增圖片</button>
+                                <button type="button" v-else @click="tempProduct.imagesUrl.pop()" class="bg-red-700 text-white w-full py-2 rounded border-2 border-red-700 transition-colors ease-linear hover:bg-red-900">刪除最後一筆</button>
                             </div>
-                            <button type="button" @click="addImage()" class="bg-gray-500 text-white w-full py-2 rounded border-2 transition-colors ease-linear hover:bg-gray-700 ">新增圖片</button>
+                            <div v-else>
+                                <button type="button"   @click="addImage()" class="bg-gray-500 text-white w-full py-2 rounded border-2 transition-colors ease-linear hover:bg-gray-700 ">新增圖片</button>
+                            </div>
                         </div>
                         
                         
@@ -211,12 +215,13 @@
                 apiUrl : 'https://vue3-course-api.hexschool.io/v2' ,
                 apiPath : 'nd5726-hexschool',
                 products : [],
-                tempProduct : [],
+                tempProduct :{
+                    imagesUrl : [],
+                },
                 isNew : false,
 
                 showFormModal : false,
                 showdeleteModal : false,
-                //modal : document.getElementById("test"),
             }
         },
         methods: {
@@ -267,9 +272,6 @@
                         console.dir(error);
                     })
                 }else{
-                    if( this.tempProduct.imagesUrl != undefined ) {
-                        this.tempProduct.imagesUrl = this.tempProduct.imagesUrl.filter(image => image.length > 0 );
-                    }
                     axios.put( `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.id}` , { data: this.tempProduct } )
                     .then((res)=>{
                         this.showFormModal = false;
